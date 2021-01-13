@@ -1,3 +1,4 @@
+import argparse
 import fnmatch
 import re
 import os
@@ -23,14 +24,24 @@ def shell_tree_command(directory_argument):
     subprocess.run(["tree", directory_argument])
 
 
+def parse_arguments():
+    """Read arguments from a command line."""
+    parser = argparse.ArgumentParser(description='Arguments get parsed via --commands')
+    # parser.add_argument("-i", metavar='input file', required=False,
+    #                     help='an input dataset in .txt file')
+    parser.add_argument('directory', metavar='directory', nargs='+',
+                        help='movie directory to organize')
+
+    args = parser.parse_args()
+
+    return args
+
+
 def main():
-    logging.info("Arguments count: [%s]", len(sys.argv))
-    if len(sys.argv) == 1:
-        logging.warning("No arguments")
-        exit(1)
+    args = parse_arguments()
 
     # loop over parameters 1 to n, skip 1st element in array which is the script path and name
-    for arg in sys.argv[1:]:
+    for arg in vars(args):
         print("Argument: ", arg)
 
         prep_testdir(arg)
