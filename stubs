@@ -12,4 +12,6 @@ for dirpath, dirnames, files in os.walk(arg):
     for file_name in files:
         print(file_name)
 
-(\.[0-9]{4})
+pwd = os.getcwd()
+logging.info('Current Directory: pwd [%s]', pwd)
+print("Current Directory: pwd [{}]".format(pwd))
