@@ -12,8 +12,6 @@ MOVIE_DIR = "Resident.Evil.The.Final.Chapter-2016"
 WORKING_DIR = "workingDir"
 TEST_DIR = 'some_directory'
 
-logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, stream=sys.stdout)
-
 
 def prep_testdir(directory_argument):
     shutil.rmtree(MOVIE_DIR)
@@ -28,19 +26,21 @@ def shell_tree_command(directory_argument):
 def parse_arguments():
     """Read arguments from a command line."""
     parser = argparse.ArgumentParser(description='Arguments get parsed via --commands')
+    parser.add_argument('-v', metavar='verbosity', type=int, default=2,
+                        help='Verbosity of logging: 0 -critical, 1- error, 2 -warning, 3 -info, 4 -debug')
     # parser.add_argument("-i", metavar='input file', required=False,
     #                     help='an input dataset in .txt file')
     parser.add_argument('directory', metavar='directory', nargs='+',
                         help='movie directory to organize')
 
     args = parser.parse_args()
+    verbose = {0: logging.CRITICAL, 1: logging.ERROR, 2: logging.WARNING, 3: logging.INFO, 4: logging.DEBUG}
+    logging.basicConfig(format='%(asctime)s %(message)s', level=verbose[args.v], stream=sys.stdout)
 
     return args
 
 
 def main():
-    args = parse_arguments()
-
     # loop over parameters 1 to n, skip 1st element in array which is the script path and name
     for directory in args.directory:
         debug("Directory: [%s]", directory)
@@ -52,7 +52,7 @@ def main():
                 if entry.is_file():
                     # TODO: look for info, nfo and mkv files and delete other files, use [!seq] (see desc. of method)
                     if fnmatch.fnmatch(entry.name, "More-4K-Stuff.url"):
-                        info("Removing file: [%s]", entry.path)
+                        warning("Removing file: [%s]", entry.path)
                         os.remove(entry.path)
                     if fnmatch.fnmatch(entry.name, "*.mkv"):
                         match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
@@ -69,4 +69,5 @@ def main():
 
 
 if __name__ == '__main__':
+    args = parse_arguments()
     main()
