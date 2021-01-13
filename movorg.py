@@ -62,10 +62,10 @@ def main():
                         # Group 2.  	23-31	.Chapter
                         # Group 3.  	32-36	2016
                         if match:
-                            moveTitle_Year = match.group(1) + '-' + match.group(3)
+                            movie_title_year = match.group(1) + '-' + match.group(3)
 
-        os.rename(directory, moveTitle_Year)
-        shell_tree_command(moveTitle_Year)
+        os.rename(directory, movie_title_year)
+        shell_tree_command(movie_title_year)
 
 
 if __name__ == '__main__':
