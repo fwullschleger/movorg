@@ -45,7 +45,7 @@ def main():
     for directory in args.directory:
         debug("Directory: [%s]", directory)
 
-        prep_testdir(directory)
+        # prep_testdir(directory)
 
         with os.scandir(directory) as entries:
             for entry in entries:
