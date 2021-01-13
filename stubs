@@ -1,0 +1,15 @@
+p = re.compile("[A-Z]")
+m = p.match(arg)
+print(m)
+
+match = re.search("[A-Z]", arg)
+if match:
+    print(match)
+
+print("\n############################\nWalking directory...")
+for dirpath, dirnames, files in os.walk(arg):
+    print(f'Found directory: {dirpath}')
+    for file_name in files:
+        print(file_name)
+
+(\.[0-9]{4})
