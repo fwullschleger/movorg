@@ -1,6 +1,6 @@
 # movorg
 
-## Regex explained
+## Regex
 `javascript^(\w+(\.\w+)*)\.([0-9]{4})(?!p)`
   - **Test Strings**
     - Resident.Evil.The.Final.Chapter.2016.German.Dubbed.DTSHD.DL.2160p.UHD.BluRay.HDR.HEVC.Remux-NIMA4K
