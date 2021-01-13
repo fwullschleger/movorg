@@ -6,12 +6,13 @@ import shutil
 import subprocess
 import sys
 import logging
+from logging import critical, error, info, warning, debug
 
 MOVIE_DIR = "Resident.Evil.The.Final.Chapter-2016"
 WORKING_DIR = "workingDir"
 TEST_DIR = 'some_directory'
 
-logging.basicConfig(format='%(asctime)s %(message)s')
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, stream=sys.stdout)
 
 
 def prep_testdir(directory_argument):
@@ -41,17 +42,17 @@ def main():
     args = parse_arguments()
 
     # loop over parameters 1 to n, skip 1st element in array which is the script path and name
-    for arg in vars(args):
-        print("Argument: ", arg)
+    for directory in args.directory:
+        debug("Directory: [%s]", directory)
 
-        prep_testdir(arg)
+        prep_testdir(directory)
 
-        with os.scandir(arg) as entries:
+        with os.scandir(directory) as entries:
             for entry in entries:
                 if entry.is_file():
                     # TODO: look for info, nfo and mkv files and delete other files, use [!seq] (see desc. of method)
                     if fnmatch.fnmatch(entry.name, "More-4K-Stuff.url"):
-                        print("Removing file: ", entry.path)
+                        info("Removing file: [%s]", entry.path)
                         os.remove(entry.path)
                     if fnmatch.fnmatch(entry.name, "*.mkv"):
                         match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
@@ -63,7 +64,7 @@ def main():
                         if match:
                             moveTitle_Year = match.group(1) + '-' + match.group(3)
 
-        os.rename(arg, moveTitle_Year)
+        os.rename(directory, moveTitle_Year)
         shell_tree_command(moveTitle_Year)
 
 
