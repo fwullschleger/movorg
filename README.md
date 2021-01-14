@@ -1,5 +1,14 @@
 # movorg
 
+## Prerequisites
+
+### Packages
+- In order for the script to work the following linux packages need to be installed on the host running the script.
+  - `tree`
+
+### Installation
+- No Installation is needed in order to execute the script
+
 ## Regex
 `javascript^(\w+(\.\w+)*)\.([0-9]{4})(?!p)`
   - **Test Strings**
