@@ -8,7 +8,7 @@ import sys
 import logging
 from logging import critical, error, info, warning, debug
 
-MOVIE_DIR = "Resident.Evil.The.Final.Chapter-2016"
+MOVIE_DIR = "Resident.Evil.The.Final.Chapter-(2016)"
 WORKING_DIR = "workingDir"
 TEST_DIR = 'some_directory'
 
@@ -45,7 +45,7 @@ def main():
     for directory in args.directory:
         debug("Directory: [%s]", directory)
 
-        # prep_testdir(directory)
+        prep_testdir(directory)
 
         with os.scandir(directory) as entries:
             for entry in entries:
@@ -62,7 +62,7 @@ def main():
                         # Group 2.  	23-31	.Chapter
                         # Group 3.  	32-36	2016
                         if match:
-                            movie_title_year = match.group(1) + '-' + match.group(3)
+                            movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
 
         os.rename(directory, movie_title_year)
         shell_tree_command(movie_title_year)

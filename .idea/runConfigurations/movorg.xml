@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/movorg.py" />
-    <option name="PARAMETERS" value="7YDO1jfxd55h_ResEvilFinal4K2016Remux" />
+    <option name="PARAMETERS" value="7YDO1jfxd55h_ResEvilFinal4K2016Remux/" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
