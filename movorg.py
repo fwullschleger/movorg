@@ -64,6 +64,7 @@ def main():
         os.rename(directory, movie_title_year)
         shell_tree_command(movie_title_year)
 
+
 def org_hd_world(directory, entry):
     if entry.is_dir:
         if fnmatch.fnmatch(entry.name, 'Sample'):
