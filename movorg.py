@@ -26,11 +26,16 @@ def shell_tree_command(directory_argument):
 def parse_arguments():
     """Read arguments from a command line."""
     parser = argparse.ArgumentParser(description='Arguments get parsed via --commands')
+
     parser.add_argument('-v', metavar='verbosity', type=int, default=2,
                         help='Verbosity of logging: 0 -critical, 1- error, 2 -warning, 3 -info, 4 -debug')
-    # parser.add_argument("-i", metavar='input file', required=False,
-    #                     help='an input dataset in .txt file')
-    parser.add_argument('directory', metavar='directory', nargs='+',
+    parser.add_argument('-w',
+                        '--world',
+                        action='store_true',
+                        help='organize movies from hd-world.org')
+    parser.add_argument('directory',
+                        action='store',
+                        nargs='+',
                         help='movie directory to organize')
 
     args = parser.parse_args()
@@ -40,12 +45,31 @@ def parse_arguments():
     return args
 
 
+def org_hd_world(entry):
+    if entry.is_file():
+        # TODO: look for info, nfo and mkv files and delete other files, use [!seq] (see desc. of method)
+        if fnmatch.fnmatch(entry.name, "More-4K-Stuff.url"):
+            warning("Removing file: [%s]", entry.path)
+            os.remove(entry.path)
+        if fnmatch.fnmatch(entry.name, "*.mkv"):
+            match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
+            # Full match	0-36	Resident.Evil.The.Final.Chapter.2016
+            # Group 0.              The entire match
+            # Group 1.  	0-31	Resident.Evil.The.Final.Chapter
+            # Group 2.  	23-31	.Chapter
+            # Group 3.  	32-36	2016
+            if match:
+                movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
+
 def main():
     # loop over parameters 1 to n, skip 1st element in array which is the script path and name
     for directory in args.directory:
         debug("Directory: [%s]", directory)
 
-        # prep_testdir(directory)
+        if args.world:
+            print('#########################')
+
+        prep_testdir(directory)
 
         with os.scandir(directory) as entries:
             for entry in entries:
