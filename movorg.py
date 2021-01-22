@@ -45,20 +45,11 @@ def parse_arguments():
     return args
 
 
-def org_hd_world(entry):
-    if entry.is_dir:
-        if fnmatch.fnmatch(entry.name, 'Sample'):
-            print('Sample directory found!')
-        if fnmatch.fnmatch(entry.name, 'Proof'):
-            print('Proof directory found!')
-        if fnmatch.fnmatch(entry.name, 'Subs'):
-            print('Subs directory found!')
-
-
 def main():
     # loop over parameters 1 to n, skip 1st element in array which is the script path and name
     for directory in args.directory:
         debug("Directory: [%s]", directory)
+        movie_title_year = directory
 
         # prep_testdir(directory)
 
@@ -66,27 +57,47 @@ def main():
             for entry in entries:
 
                 if args.world:
-                    # this comment is necessary to suppress an unnecessary PyCharm warning
-                    # noinspection PyTypeChecker
-                    org_hd_world(entry)
+                    org_hd_world(directory, entry)
+                else:
+                    movie_title_year = org_nima4k(entry, movie_title_year)
 
-        #         if entry.is_file():
-        #             # TODO: look for info, nfo and mkv files and delete other files, use [!seq] (see desc. of method)
-        #             if fnmatch.fnmatch(entry.name, "More-4K-Stuff.url"):
-        #                 warning("Removing file: [%s]", entry.path)
-        #                 os.remove(entry.path)
-        #             if fnmatch.fnmatch(entry.name, "*.mkv"):
-        #                 match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
-        #                 # Full match	0-36	Resident.Evil.The.Final.Chapter.2016
-        #                 # Group 0.              The entire match
-        #                 # Group 1.  	0-31	Resident.Evil.The.Final.Chapter
-        #                 # Group 2.  	23-31	.Chapter
-        #                 # Group 3.  	32-36	2016
-        #                 if match:
-        #                     movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
-        #
-        # os.rename(directory, movie_title_year)
-        # shell_tree_command(movie_title_year)
+        os.rename(directory, movie_title_year)
+        shell_tree_command(movie_title_year)
+
+def org_hd_world(directory, entry):
+    if entry.is_dir:
+        if fnmatch.fnmatch(entry.name, 'Sample'):
+            warning("Removing directory: [%s]", entry.path)
+            shutil.rmtree(entry.path)
+        if fnmatch.fnmatch(entry.name, 'Proof'):
+            warning("Removing directory: [%s]", entry.path)
+            shutil.rmtree(entry.path)
+        if fnmatch.fnmatch(entry.name, 'Subs'):
+            for root, dirs, files in os.walk(entry.path, topdown=False):
+                for file in files:
+                    info("Moving files in [%s] up one directory.", entry.path)
+                    shutil.move(os.path.join(root, file), directory)
+            warning("Removing directory: [%s]", entry.path)
+            shutil.rmtree(entry.path)
+
+
+def org_nima4k(entry, movie_title_year):
+    if entry.is_file():
+        # TODO: look for info, nfo and mkv files and delete other files, use [!seq] (see desc. of method)
+        if fnmatch.fnmatch(entry.name, "More-4K-Stuff.url"):
+            warning("Removing file: [%s]", entry.path)
+            os.remove(entry.path)
+        if fnmatch.fnmatch(entry.name, "*.mkv"):
+            match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
+            # Full match	0-36	Resident.Evil.The.Final.Chapter.2016
+            # Group 0.              The entire match
+            # Group 1.  	0-31	Resident.Evil.The.Final.Chapter
+            # Group 2.  	23-31	.Chapter
+            # Group 3.  	32-36	2016
+            if match:
+                movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
+
+    return movie_title_year
 
 
 if __name__ == '__main__':
