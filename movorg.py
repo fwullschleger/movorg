@@ -66,7 +66,7 @@ def main():
                     movie_title_year = org_nima4k(entry, movie_title_year)
 
         if args.rename:
-            rename_hd_world(directory)
+            movie_title_year = rename_hd_world(directory, movie_title_year)
 
         os.rename(directory, movie_title_year)
         shell_tree_command(movie_title_year)
@@ -94,7 +94,7 @@ def org_hd_world(directory, entry):
             shutil.rmtree(entry.path)
 
 
-def rename_hd_world(directory):
+def rename_hd_world(directory, movie_title_year):
     with os.scandir(directory) as entries:
         for entry in entries:
             if entry.is_file:
@@ -102,6 +102,10 @@ def rename_hd_world(directory):
                 directory_name = directory.rstrip('/')
                 new_filepath = re.sub('(?<=/)(.*[_|-]1080p)', directory_name, entry.path)
                 os.renames(entry.path, new_filepath)
+
+    movie_title_year = generate_movie_title_year(directory, movie_title_year)
+
+    return movie_title_year
 
 
 def org_nima4k(entry, movie_title_year):
@@ -111,15 +115,20 @@ def org_nima4k(entry, movie_title_year):
             warning("Removing file: [%s]", entry.path)
             os.remove(entry.path)
         if fnmatch.fnmatch(entry.name, "*.mkv"):
-            match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", entry.name)
-            # Full match	0-36	Resident.Evil.The.Final.Chapter.2016
-            # Group 0.              The entire match
-            # Group 1.  	0-31	Resident.Evil.The.Final.Chapter
-            # Group 2.  	23-31	.Chapter
-            # Group 3.  	32-36	2016
-            if match:
-                movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
+            movie_title_year = generate_movie_title_year(entry.name, movie_title_year)
 
+    return movie_title_year
+
+
+def generate_movie_title_year(directory_name, movie_title_year):
+    match = re.search("^(\\w+(\\.\\w+)*)\\.([0-9]{4})(?!p)", directory_name)
+    # Full match	0-36	Resident.Evil.The.Final.Chapter.2016
+    # Group 0.              The entire match
+    # Group 1.  	0-31	Resident.Evil.The.Final.Chapter
+    # Group 2.  	23-31	.Chapter
+    # Group 3.  	32-36	2016
+    if match:
+        movie_title_year = match.group(1) + '-(' + match.group(3) + ')'
     return movie_title_year
 
 
