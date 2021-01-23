@@ -33,6 +33,10 @@ def parse_arguments():
                         '--world',
                         action='store_true',
                         help='organize movies from hd-world.org')
+    parser.add_argument('-n',
+                        '--rename',
+                        action='store_true',
+                        help='rename movies from hd-world.org')
     parser.add_argument('directory',
                         action='store',
                         nargs='+',
@@ -61,6 +65,9 @@ def main():
                 else:
                     movie_title_year = org_nima4k(entry, movie_title_year)
 
+        if args.rename:
+            rename_hd_world(directory)
+
         os.rename(directory, movie_title_year)
         shell_tree_command(movie_title_year)
 
@@ -85,6 +92,16 @@ def org_hd_world(directory, entry):
                         shutil.move(subs.path, directory)
             warning("Removing directory: [%s]", entry.path)
             shutil.rmtree(entry.path)
+
+
+def rename_hd_world(directory):
+    with os.scandir(directory) as entries:
+        for entry in entries:
+            if entry.is_file:
+                info("Moving file [%s] up one directory.", entry.path)
+                directory_name = directory.rstrip('/')
+                new_filepath = re.sub('(?<=/)(.*[_|-]1080p)', directory_name, entry.path)
+                os.renames(entry.path, new_filepath)
 
 
 def org_nima4k(entry, movie_title_year):
