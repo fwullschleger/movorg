@@ -1,5 +1,8 @@
 # movorg
 
+## TODOs and Enhancements
+- [ ] make script idempotent
+
 ## Prerequisites
 
 ### Packages
