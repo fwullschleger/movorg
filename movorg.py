@@ -66,6 +66,10 @@ def main():
 
 
 def org_hd_world(directory, entry):
+    if entry.is_file():
+        if not fnmatch.fnmatch(entry.name, '*.mkv') and not fnmatch.fnmatch(entry.name, '*.nfo'):
+            warning("Removing file: [%s]", entry.path)
+            os.remove(entry.path)
     if entry.is_dir:
         if fnmatch.fnmatch(entry.name, 'Sample'):
             warning("Removing directory: [%s]", entry.path)
