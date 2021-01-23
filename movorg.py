@@ -78,10 +78,11 @@ def org_hd_world(directory, entry):
             warning("Removing directory: [%s]", entry.path)
             shutil.rmtree(entry.path)
         if fnmatch.fnmatch(entry.name, 'Subs'):
-            for root, dirs, files in os.walk(entry.path, topdown=False):
-                for file in files:
-                    info("Moving files in [%s] up one directory.", entry.path)
-                    shutil.move(os.path.join(root, file), directory)
+            with os.scandir(entry.path) as subtitles:
+                for subs in subtitles:
+                    if subs.is_file:
+                        info("Moving file [%s] up one directory.", subs.path)
+                        shutil.move(subs.path, directory)
             warning("Removing directory: [%s]", entry.path)
             shutil.rmtree(entry.path)
 
